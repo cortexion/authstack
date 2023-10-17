@@ -6,6 +6,7 @@ mvn spring-boot:run
 
 Package .jar and then push to deploy:
 Maven -> Run Maven Commands -> package
+Test jar locally: C:\Users\...\demo\target> java -jar App-0.0.1-SNAPSHOT.jar
 
 http://localhost:8080/api/auth/signup
 {
@@ -29,8 +30,8 @@ spring.jpa.properties.hibernate.dialect= org.hibernate.dialect.PostgreSQLDialect
 spring.jpa.hibernate.ddl-auto= update
 
 # App Properties
-bezkoder.app.jwtSecret= ======================BezKoder=Spring===========================
-bezkoder.app.jwtExpirationMs= 86400000
+demo.app.jwtSecret= ======================spring===========================
+demo.app.jwtExpirationMs= 86400000
 ```
 
 ## Run following SQL insert statements
