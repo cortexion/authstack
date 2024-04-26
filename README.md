@@ -21,7 +21,7 @@ Open `src/main/resources/application.properties`
 ```
 spring.datasource.url= jdbc:postgresql://localhost:5432/testdb
 spring.datasource.username= postgres
-spring.datasource.password= 123
+spring.datasource.password= postgres
 
 spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation= true
 spring.jpa.properties.hibernate.dialect= org.hibernate.dialect.PostgreSQLDialect
