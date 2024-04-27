@@ -22,6 +22,9 @@ public class SearchController {
 
     @GetMapping(value = "/{query}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ResponseEntity<String>> searchFoods(@PathVariable String query) {
+
+        System.out.println("test test test");
+
         final String uri = "https://fineli.fi/fineli/api/v1/foods?q=" + query;
 
         WebClient client = WebClient.create();
