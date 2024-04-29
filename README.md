@@ -2,9 +2,11 @@
 Frontend development:
 
 `\Documents\authstack\frontend> npm run start`
+
 Frontend build:
 
 `\Documents\authstack\frontend> npm run build`
+
 Start server:
 
 `\Documents\authstack> mvn spring-boot:run`
@@ -14,17 +16,18 @@ Start server:
 Package .jar and then push to deploy:
 
 `Maven -> Run Maven Commands -> package`
+
 Test jar locally:
 
 `C:\Users\...\demo\target> java -jar App-0.0.1-SNAPSHOT.jar`
 
 http://localhost:8080/api/auth/signup
-{
+`{
 "username": "testerman",
 "email": "testerman@testerman.com",
 "password": "testerman",
 "role": ["user", "mod", "admin"]
-}
+}`
 
 Open `src/main/resources/application.properties`
 
