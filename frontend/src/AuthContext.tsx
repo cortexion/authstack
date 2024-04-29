@@ -11,7 +11,7 @@ export const AuthContextProvider = ({ children }: any) => {
 
     const fetchMovies = useCallback(async () => {
         try {
-            const response = await fetch(`/api/test/json`, {
+            const response = await fetch(`https://fineli.fi/fineli/api/v1/foods?q=kanapy%C3%B6rykk%C3%A4`, {
                 method: 'GET',
             });
             const moviesJson = await response.json();
