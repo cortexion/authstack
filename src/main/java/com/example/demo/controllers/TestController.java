@@ -15,6 +15,11 @@ public class TestController {
         return "Public Content.";
     }
 
+    @GetMapping(value = "/json", produces = "application/json")
+    public String getGreetingWhileReturnTypeIsString() {
+        return "{\"test\": \"Hello\"}";
+    }
+
     @GetMapping("/user")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public String userAccess() {

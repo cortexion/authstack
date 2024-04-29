@@ -11,12 +11,12 @@ export const AuthContextProvider = ({ children }: any) => {
 
     const fetchMovies = useCallback(async () => {
         try {
-            const response = await fetch(`/api/movies/`, {
+            const response = await fetch(`/api/test/json`, {
                 method: 'GET',
             });
             const moviesJson = await response.json();
             console.log(moviesJson);
-            setMovies(moviesJson);
+            //setMovies(moviesJson);
         } catch (e) {
             console.log('fetchChartData error: ', e);
             throw new Error((e as Error).message);
@@ -28,7 +28,7 @@ export const AuthContextProvider = ({ children }: any) => {
     useEffect(() => {
         (async () => {
             if (movies.length < 1) {
-                //fetchMovies();
+                fetchMovies();
             }
         })();
     }, []);

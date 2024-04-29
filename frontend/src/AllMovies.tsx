@@ -41,7 +41,7 @@ const AllMovies = () => {
                 autoComplete="off"
                 style={{ padding: '30px' }}
             >
-                <h4>Movies list</h4>
+                <h4>Movies list:</h4>
                 <TextField id="outlined-basic" label="Filter movies" variant="outlined" type="text"
                     name="term"
                     className="form-input"
