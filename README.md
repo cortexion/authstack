@@ -1,13 +1,21 @@
 ---------------------------------------------------------------------------
-Frontend developement: `\Documents\authstack\frontend> npm run start`
-Frontend build: `\Documents\authstack\frontend> npm run build`
-Start server: `\Documents\authstack> mvn spring-boot:run`
+Frontend development:
+
+`\Documents\authstack\frontend> npm run start`
+Frontend build:
+
+`\Documents\authstack\frontend> npm run build`
+Start server:
+
+`\Documents\authstack> mvn spring-boot:run`
 
 ---
 
 Package .jar and then push to deploy:
+
 `Maven -> Run Maven Commands -> package`
 Test jar locally:
+
 `C:\Users\...\demo\target> java -jar App-0.0.1-SNAPSHOT.jar`
 
 http://localhost:8080/api/auth/signup
