@@ -27,6 +27,9 @@ public class JwtUtils {
 
   public String generateJwtToken(Authentication authentication) {
 
+    System.out.println("authentication:");
+    System.out.println(authentication);
+
     UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
     return Jwts.builder()

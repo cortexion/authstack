@@ -5,9 +5,10 @@ import TopBar from "./TopBar";
 
 export const HomeLayout = () => {
     const outlet = useOutlet();
+    const { user } = useAuthContext();
 
     return (
-        <div>
+        <div>{'User: ' + user}
             <TopBar />
             {outlet}
         </div>
