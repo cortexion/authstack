@@ -16,6 +16,9 @@ public class Consumable {
   private String name;
 
   @NotNull
+  private Double energyKcal;
+
+  @NotNull
   private Double protein;
 
   @NotNull
@@ -37,9 +40,11 @@ public class Consumable {
   public Consumable() {
   }
 
-  public Consumable(String name, Double protein, Double carb, Double fat, Double amount, LocalDateTime consumedAt,
+  public Consumable(String name, Double energyKcal, Double protein, Double carb, Double fat, Double amount,
+      LocalDateTime consumedAt,
       User user) {
     this.name = name;
+    this.energyKcal = energyKcal;
     this.protein = protein;
     this.carb = carb;
     this.fat = fat;
@@ -62,6 +67,14 @@ public class Consumable {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public Double getEnergyKcal() {
+    return energyKcal;
+  }
+
+  public void setEnergyKcal(Double energyKcal) {
+    this.energyKcal = energyKcal;
   }
 
   public Double getProtein() {

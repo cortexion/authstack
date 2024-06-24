@@ -5,7 +5,6 @@ com\example\demo\repository\UserRepository.class
 com\example\demo\security\jwt\JwtUtils.class
 com\example\demo\payload\request\LoginRequest.class
 com\example\demo\models\ERole.class
-com\example\demo\controllers\TestController.class
 com\example\demo\repository\RoleRepository.class
 com\example\demo\models\User.class
 com\example\demo\payload\request\SignupRequest.class

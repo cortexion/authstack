@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 public class ConsumableDTO {
   private Long id;
   private String name;
+  private Double energyKcal;
   private Double protein;
   private Double carb;
   private Double fat;
@@ -16,10 +17,11 @@ public class ConsumableDTO {
 
   // This class returns only fields that we need (No user)
 
-  public ConsumableDTO(Long id, String name, Double protein, Double carb, Double fat, Double amount,
+  public ConsumableDTO(Long id, String name, Double energyKcal, Double protein, Double carb, Double fat, Double amount,
       LocalDateTime consumedAt) {
     this.id = id;
     this.name = name;
+    this.energyKcal = energyKcal;
     this.protein = protein;
     this.carb = carb;
     this.fat = fat;
@@ -41,6 +43,14 @@ public class ConsumableDTO {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public Double getEnergyKcal() {
+    return energyKcal;
+  }
+
+  public void setEnergyKcal(Double energyKcal) {
+    this.energyKcal = energyKcal;
   }
 
   public Double getProtein() {

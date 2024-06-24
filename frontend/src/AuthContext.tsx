@@ -1,21 +1,25 @@
 import React, { useCallback } from 'react'
 import { createContext, useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const AuthContext = createContext<any>({
     user: null,
-    consumbales: [],
+    selectedDateObject: null,
+    dates: [],
     addConsumable: () => { },
     login: () => { },
     logout: () => { },
 });
 export const useAuthContext = () => useContext(AuthContext);
 export const AuthContextProvider = ({ children }: any) => {
+    let navigate = useNavigate();
     const [user, setUser] = useState<any>(null);
-    const [consumbales, setConsumables] = useState<any[]>([]);
+    const [selectedDateObject, setSelectedDateObject] = useState<any>(null);
+    const [dates, setDates] = useState<any[]>([]);
 
     const doHealthCheck = useCallback(async (authJwt: string) => {
-        console.log('doHealthCheck')
-        console.log(authJwt)
+        //console.log('doHealthCheck')
+        //console.log(authJwt)
         try {
             const response = await fetch(`/api/auth/healthCheck`, {
                 method: 'GET',
@@ -25,7 +29,7 @@ export const AuthContextProvider = ({ children }: any) => {
             });
             if (response.status === 401) {
                 const errorText = await response.text();
-                alert("Error: " + errorText);
+                //alert("Error: " + errorText);
                 setUser(null);
                 localStorage.removeItem('authjwt');
             } else {
@@ -39,47 +43,28 @@ export const AuthContextProvider = ({ children }: any) => {
         }
     }, []);
 
-    const addConsumable = useCallback(async (result: any) => {
-        console.log('addConsumable: ')
-        console.log(result)
-        //take result and do body: JSON.stringify({ ...result } etc
-        try {
-            const response = await fetch(`/api/test/consumables/add`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${user}`
-                },
-                body: JSON.stringify({
-                    name: result.name.fi,
-                    protein: 100.00,
-                    carb: 20.00,
-                    fat: 23.00,
-                    amount: parseFloat(result.amount),
-                    consumedAt: result.consumedAt
-                })
-            });
-            const userJson = await response.json();
-            
-        } catch (e) {
-            console.log('checkHealth error: ', e);
-            throw new Error((e as Error).message);
-        }
-    }, [user]);
-
     const getConsumables = useCallback(async (authJwt: string) => {
-        console.log('getConsumables')
-        console.log(authJwt)
+        //console.log('getConsumables')
+        //console.log(authJwt)
         try {
-            const response = await fetch(`/api/test/consumables`, {
+            const response = await fetch(`/api/manage/consumables`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${authJwt}`
                 }
             });
-            const consumablesJson = await response.json();
-            console.log('getConsumables: ', consumablesJson);
-            setConsumables(consumablesJson);
+            if (response.status === 200) {
+                const datesJson = await response.json();
+                //console.log('getConsumables: ', consumablesJson);
+                const newDates = datesJson?.map((date: any) => {
+                    date.isExpanded = false;
+                    return date;
+                })
+                setDates(newDates);
+            } else {
+                console.error('Error with adding item!');
+                alert('Error with adding item!');
+            }
         } catch (e) {
             console.log('checkHealth error: ', e);
             setUser(null);
@@ -87,10 +72,59 @@ export const AuthContextProvider = ({ children }: any) => {
         }
     }, []);
 
-    const login = useCallback(async (username: string, password: string) => {
-        console.log('login')
-        console.log(username)
-        console.log(password)
+    const addConsumable = useCallback(async (dateValue: any, result: any) => {
+        console.log('addConsumable: ')
+        console.log(result)
+        try {
+            const response = await fetch(`/api/manage/consumables/add`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user}`
+                },
+                body: JSON.stringify({
+                    name: result.name.fi,
+                    energyKcal: parseFloat(result.energyKcal).toFixed(2),
+                    protein: parseFloat(result.protein).toFixed(2),
+                    carb: parseFloat(result.carbohydrate).toFixed(2),
+                    fat: parseFloat(result.fat).toFixed(2),
+                    amount: parseFloat(result.amount).toFixed(2),
+                    consumedAt: dateValue.format('YYYY-MM-DDTHH:mm:ss'),
+                })
+            });
+            const userJson = await response.json();
+            getConsumables(user);
+        } catch (e) {
+            console.log('checkHealth error: ', e);
+            throw new Error((e as Error).message);
+        }
+    }, [user]);
+
+    const updateDateObject = useCallback(async (date: string, updatedDateObject: any) => {
+        try {
+            const response = await fetch(`/api/manage/consumables/edit`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user}`
+                },
+                body: JSON.stringify({ date, consumables: updatedDateObject }),
+            });
+            
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+    
+            const userJson = await response.json();
+            getConsumables(user);
+            return true;
+        } catch (e) {
+            console.log('checkHealth error: ', e);
+            return false;
+        }
+    }, [user]);
+
+    const login = useCallback(async (username: string, password: string) => {        
         try {
             const response = await fetch(`/api/auth/signin`, {
                 method: 'POST',
@@ -105,6 +139,8 @@ export const AuthContextProvider = ({ children }: any) => {
             const userJson = await response.json();
             setUser(userJson.accessToken);
             localStorage.setItem('authjwt', userJson.accessToken);
+            setDates([]);
+            getConsumables(userJson.accessToken);
         } catch (e) {
             console.log('checkHealth error: ', e);
             setUser(null);
@@ -116,6 +152,33 @@ export const AuthContextProvider = ({ children }: any) => {
     const logout = useCallback(async () => {
         setUser(null);
         localStorage.removeItem('authjwt');
+        setDates([]);
+        navigate(`/`);
+    }, []);
+
+    const signUp = useCallback(async (username: string, password: string) => {
+        setDates([]);
+        try {
+            const response = await fetch(`/api/auth/signin`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            });
+            const userJson = await response.json();
+            setUser(userJson.accessToken);
+            localStorage.setItem('authjwt', userJson.accessToken);
+            getConsumables(userJson.accessToken);
+        } catch (e) {
+            console.log('checkHealth error: ', e);
+            setUser(null);
+            //localStorage.removeItem('authjwt');
+            throw new Error((e as Error).message);
+        }
     }, []);
 
     useEffect(() => {
@@ -132,14 +195,14 @@ export const AuthContextProvider = ({ children }: any) => {
                 setUser(null);
                 //localStorage.removeItem('authjwt');
             }
-            if (consumbales.length < 1) {
+            if (dates.length < 1) {
                 //fetchMovies();
             }
         })();
     }, []);
 
     return (
-        <AuthContext.Provider value={{ consumbales, addConsumable, user, login, logout }}>
+        <AuthContext.Provider value={{ dates, setDates, addConsumable, user, login, logout, selectedDateObject, setSelectedDateObject, updateDateObject }}>
             {children}
         </AuthContext.Provider>
     );

@@ -8,7 +8,7 @@ export const HomeLayout = () => {
     const { user } = useAuthContext();
 
     return (
-        <div>{'User: ' + user}
+        <div>{/*'User: ' + user*/}
             <TopBar />
             {outlet}
         </div>

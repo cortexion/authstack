@@ -6,8 +6,8 @@ import {
 } from "react-router-dom";
 import logo from './logo.svg';
 import './App.css';
-import AllMovies from './AllMovies'
-import AddNew from './AddNew'
+import AllDates from './AllDates'
+import DateComponent from './DateComponent'
 import { HomeLayout } from './HomeLayout';
 
 const App = () => {
@@ -15,8 +15,8 @@ const App = () => {
   return (
       <Routes>
           <Route element={<HomeLayout />}>
-              <Route path="/" element={<AllMovies />} />
-              <Route path="/addnew" element={<AddNew />} />
+              <Route path="/" element={<AllDates />} />
+              <Route path="/date/:id" element={<DateComponent />} />
           </Route>
       </Routes>)
 };
