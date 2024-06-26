@@ -38,23 +38,14 @@ const TopBar = () => {
         >
             <Toolbar sx={{ flexWrap: 'wrap' }}>
                 <Typography variant="h5" color="inherit" noWrap sx={{ flexGrow: 1 }} style={{ cursor: 'pointer', color: 'orange', fontWeight: 'bold' }} onClick={() => { navigate("/"); }}>
-                    My Consumables
+                    My food diary
                 </Typography>
                 <nav>
                     <TextField size="small" id="username" label="Username" variant="outlined" type='text' value={username} onChange={(ev: { target: { value: React.SetStateAction<string>; }; }) => setUsername(ev.target.value)} required />
                     <TextField size="small" id="password" label="Password" variant="outlined" type='text' value={password} onChange={(ev: { target: { value: React.SetStateAction<string>; }; }) => setPassword(ev.target.value)} required />
                     <Button style={{ marginLeft: '5px' }} size="small" variant="outlined" onClick={async () => { login(username, password); }}>Login</Button>
-                    <Link
-                        variant="button"
-                        color="text.primary"
-                        sx={{ my: 1, mx: 1.5 }}
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => { navigate("/"); }}
-                    >
-                        All consumables
-                    </Link>
                     <Button style={{ marginLeft: '5px' }} size="small" variant="outlined" onClick={async () => { logout(); }}>Logout</Button>
-                    <Button style={{ marginLeft: '5px' }} size="small" variant="outlined" onClick={async () => { setShowSignup(!showSignup); }}>{!showSignup ? 'Show signup' : 'Hide signup'}</Button>
+                    {/*<Button style={{ marginLeft: '5px' }} size="small" variant="outlined" onClick={async () => { setShowSignup(!showSignup); }}>{!showSignup ? 'Show signup' : 'Hide signup'}</Button>*/}
                     {showSignup && <div style={{ marginTop: '10px' }}>                        
                         <TextField size="small" id="username" label="Username" variant="outlined" type='text' value={username} onChange={(ev: { target: { value: React.SetStateAction<string>; }; }) => setUsername(ev.target.value)} required />
                         <TextField size="small" id="password" label="Password" variant="outlined" type='text' value={password} onChange={(ev: { target: { value: React.SetStateAction<string>; }; }) => setPassword(ev.target.value)} required />

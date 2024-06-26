@@ -17,6 +17,7 @@ import {
     DialogActions
 } from '@mui/material';
 import { useAuthContext } from './AuthContext';
+import dayjs from 'dayjs';
 
 const DateComponent = () => {
     const location = useLocation();
@@ -33,12 +34,10 @@ const DateComponent = () => {
     const [itemToRemove, setItemToRemove] = useState<any>(null);
 
     useEffect(() => {
-        if (!isEdited) {
-            const foundDate = dates.find((item: any) => item.date === dateSegment);
-            if (foundDate) {
-                setSelectedDateObject({...selectedDateObject, consumables: foundDate.consumables});
-            } 
-        }       
+        const foundDate = dates.find((item: any) => item.date === dateSegment);
+        if (foundDate) {
+            setSelectedDateObject({...selectedDateObject, consumables: foundDate.consumables});
+        }
     }, [isEdited, dateSegment, dates]);
 
     const handleOpenModal = (item: any) => {
@@ -55,21 +54,34 @@ const DateComponent = () => {
         if (itemToRemove) {
             const currentConsumables = selectedDateObject.consumables;
             const updatedConsumables = currentConsumables.filter((consumable: any) => consumable.id !== itemToRemove.id);
-            setIsEdited(true);
-            setRemovedConsumables([...removedConsumables, itemToRemove]);
-    
-            const success = await updateDateObject(dateSegment, updatedConsumables);
-            if (success) {
-                setSelectedDateObject({...selectedDateObject, consumables: updatedConsumables});
-            }
-            handleCloseModal();
+            //setIsEdited(true);    
+            const response = await updateDateObject(dateSegment, updatedConsumables);
+            if (response.success) {
+                console.log('success');
+                setRemovedConsumables([...removedConsumables, itemToRemove]);
+                handleCloseModal();
+            } else {
+                alert(`Error with removing: ${response.message}`);
+            }            
         }
     };
 
+    let totalWeekEnergyKcal = 0;
+    let totalWeekProtein = 0;
+    let totalWeekCarb = 0;
+    let totalWeekFat = 0;
+
+    consumables.forEach((dayItem: any, index: any) => {
+        totalWeekEnergyKcal = totalWeekEnergyKcal + dayItem.energyKcal;
+        totalWeekProtein = totalWeekProtein + dayItem.protein;
+        totalWeekCarb = totalWeekCarb + dayItem.carb;
+        totalWeekFat = totalWeekFat + dayItem.fat;
+    })
+
     return (
         <Container maxWidth="md" component="main">
-            {JSON.stringify(selectedDateObject)}
-            <div style={{border: '1px solid black', backgroundColor: 'rgb(231, 231, 231)', borderRadius: '5px', padding: '15px', margin: '10px', boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}>
+            {/*JSON.stringify(selectedDateObject)*/}
+            {!!consumables.length && <div style={{border: '1px solid black', backgroundColor: 'rgb(231, 231, 231)', borderRadius: '5px', padding: '15px', margin: '10px', boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}>
                 <b>4 week's totals:</b><hr></hr>
                 <TableContainer component={Paper} style={{ marginTop: '10px' }}>
                 <Table>
@@ -83,20 +95,18 @@ const DateComponent = () => {
                     </TableHead>
                     <TableBody>
                     <TableRow>
-                        <TableCell>{3542} kcal</TableCell>
-                        <TableCell>{223} g</TableCell>
-                        <TableCell>{223} g</TableCell>
-                        <TableCell>{223} g</TableCell>
+                        <TableCell>{totalWeekEnergyKcal} kcal</TableCell>
+                        <TableCell>{totalWeekProtein} g</TableCell>
+                        <TableCell>{totalWeekCarb} g</TableCell>
+                        <TableCell>{totalWeekFat} g</TableCell>
                     </TableRow>
                     </TableBody>
                 </Table>
                 </TableContainer>
-            </div>
-
-            <Typography variant="h4" gutterBottom>Date Component</Typography>
-            <Typography variant="h6">Date: {date}</Typography>
-            <Typography variant="h6" gutterBottom>Consumables:</Typography>
-            {consumables && consumables.length > 0 ? (
+            </div>}
+            <Typography variant="h5">Date: {dayjs(date).format('DD.MM.YYYY')}</Typography>
+            <Typography variant="h6">Consumables:</Typography>
+            {!!consumables.length ? (
             <TableContainer component={Paper} style={{ marginBottom: '2rem' }}>
                 <Table>
                     <TableHead>

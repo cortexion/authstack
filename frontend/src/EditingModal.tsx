@@ -40,21 +40,26 @@ const EditingModal: React.FC = () => {
     const pathSegments = location.pathname.split('/');
     const dateSegment = pathSegments[pathSegments.length - 1];
 
-    const handleSubmit = () => {
-        updateDateObject(dateSegment, consumables);
-        //handleClose();
+    const handleSubmit = async () => {
+        const response = await updateDateObject(dateSegment, consumables);
+        if (response.success) {
+            console.log('success');
+            handleClose();
+        } else {
+            alert(`Error with removing: ${response.message}`);
+        }     
     };
 
     return (
         <>
-            <Button 
+            {!!consumables.length && <Button 
                 onClick={handleOpen} 
                 variant="contained" 
                 color="primary" 
-                style={{ margin: '10px', backgroundColor: '#3f51b5', color: '#fff' }}
+                style={{ }}
             >
                 Edit Date
-            </Button>
+            </Button>}
             <Modal
                 open={open}
                 onClose={handleClose}

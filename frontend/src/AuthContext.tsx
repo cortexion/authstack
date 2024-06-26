@@ -44,8 +44,6 @@ export const AuthContextProvider = ({ children }: any) => {
     }, []);
 
     const getConsumables = useCallback(async (authJwt: string) => {
-        //console.log('getConsumables')
-        //console.log(authJwt)
         try {
             const response = await fetch(`/api/manage/consumables`, {
                 method: 'GET',
@@ -62,8 +60,7 @@ export const AuthContextProvider = ({ children }: any) => {
                 })
                 setDates(newDates);
             } else {
-                console.error('Error with adding item!');
-                alert('Error with adding item!');
+                console.error('Auth error! Please login...');
             }
         } catch (e) {
             console.log('checkHealth error: ', e);
@@ -89,14 +86,18 @@ export const AuthContextProvider = ({ children }: any) => {
                     carb: parseFloat(result.carbohydrate).toFixed(2),
                     fat: parseFloat(result.fat).toFixed(2),
                     amount: parseFloat(result.amount).toFixed(2),
-                    consumedAt: dateValue.format('YYYY-MM-DDTHH:mm:ss'),
+                    consumedAt: dateValue.startOf('day').format('YYYY-MM-DDTHH:mm:ss'),
                 })
             });
             const userJson = await response.json();
+            if (!response.ok) {
+                throw new Error(userJson.message || 'Network response was not ok');
+            }
             getConsumables(user);
+            return { success: true };
         } catch (e) {
-            console.log('checkHealth error: ', e);
-            throw new Error((e as Error).message);
+            console.log('addConsumable error: ', e);
+            return { success: false, message: (e as Error).message };
         }
     }, [user]);
 
@@ -117,7 +118,7 @@ export const AuthContextProvider = ({ children }: any) => {
     
             const userJson = await response.json();
             getConsumables(user);
-            return true;
+            return { success: true };
         } catch (e) {
             console.log('checkHealth error: ', e);
             return false;

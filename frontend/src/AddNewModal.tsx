@@ -6,23 +6,24 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const AddNewModal = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const pathSegments = location.pathname.split('/');
     const dateSegment = pathSegments[pathSegments.length - 1];
     const initialDate = dayjs(dateSegment, 'YYYY-MM-DD', true).isValid() ? dayjs(dateSegment) : dayjs();
     const [dateValue, setDateValue] = React.useState<Dayjs | null>(initialDate);
 
-    const { addConsumable, consumbales, fetchData } = useAuthContext();
+    const { addConsumable } = useAuthContext();
     const [results, setResults] = useState<any[]>([]);
     const [open, setOpen] = useState(false);
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    const [query, setQuery] = useState("");
+    const [query, setQuery] = useState("kana");
     const [loading, setLoading] = useState(false);
 
     React.useEffect(() => {
@@ -78,16 +79,24 @@ const AddNewModal = () => {
         });
     };
 
-    const handleConsumedAtInputChange = (dateValue: any, result: any) => {
-        setResults(prevResults => {
-            return prevResults.map(oldResult => 
-                oldResult.id === result.id ? { ...oldResult, consumedAt: dateValue.format('YYYY-MM-DDTHH:mm:ss') } : oldResult
-            );
-        });
+    const handleAddNew = async (dateValue: any, result: any) => {
+        const response = await addConsumable(dateValue, result);
+        if (response.success) {
+            handleClose();
+        } else {
+            alert(`Error with adding: ${response.message}`);
+        }
     };
 
-    return (
-<>
+    return (<>
+            <Button 
+                onClick={() => { navigate("/"); }}
+                variant="contained" 
+                color="primary" 
+                style={{ margin: '10px' }}
+            >
+                All consumables
+            </Button>
             <Button 
                 onClick={handleOpen} 
                 variant="contained" 
@@ -176,11 +185,10 @@ const AddNewModal = () => {
                                 style={{ 
                                     marginTop: '10px', 
                                     backgroundColor: '#3f51b5', 
-                                    color: '#fff', 
-                                    fontWeight: 'bold',
+                                    color: '#fff',
                                     marginLeft: '10px'
                                 }} 
-                                onClick={() => addConsumable(dateValue, result)}
+                                onClick={() => handleAddNew(dateValue, result)}
                             >
                                 Add to tracking
                             </Button>

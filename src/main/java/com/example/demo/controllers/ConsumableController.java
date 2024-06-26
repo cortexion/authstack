@@ -44,7 +44,7 @@ public class ConsumableController {
 
     @GetMapping("/all")
     public String allAccess() {
-        return "Public Content.";
+        return "Public Content!";
     }
 
     @GetMapping(value = "/consumables", produces = "application/json")
@@ -54,7 +54,7 @@ public class ConsumableController {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
         LocalDateTime endDate = LocalDateTime.now();
-        LocalDateTime startDate = endDate.minusWeeks(4);
+        LocalDateTime startDate = endDate.minusWeeks(4).toLocalDate().atStartOfDay();
 
         List<Consumable> consumables = consumableRepository.findByUserIdAndConsumedAtBetween(
                 userDetails.getId(), startDate, endDate);
