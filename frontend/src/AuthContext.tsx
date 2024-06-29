@@ -70,8 +70,8 @@ export const AuthContextProvider = ({ children }: any) => {
     }, []);
 
     const addConsumable = useCallback(async (dateValue: any, result: any) => {
-        console.log('addConsumable: ')
-        console.log(result)
+        //console.log('addConsumable: ')
+        //console.log(result)
         try {
             const response = await fetch(`/api/manage/consumables/add`, {
                 method: 'POST',
@@ -188,7 +188,7 @@ export const AuthContextProvider = ({ children }: any) => {
             const authJwt = localStorage.getItem('authjwt');
             //console.log('authJwt is: ', authJwt);
             if (authJwt) {
-                console.log('authJwt is: ', authJwt);
+                //console.log('authJwt is: ', authJwt);
                 setUser(authJwt);
                 doHealthCheck(authJwt);
                 getConsumables(authJwt);

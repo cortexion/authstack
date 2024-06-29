@@ -15,7 +15,7 @@ import EditingModal from './EditingModal';
 const TopBar = () => {
     let navigate = useNavigate();
     const location = useLocation();
-    const { consumables, login, logout } = useAuthContext();
+    const { user, login, logout } = useAuthContext();
     
     const [username, setUsername] = React.useState("testerman");
     const [password, setPassword] = React.useState("testerman");
@@ -41,10 +41,10 @@ const TopBar = () => {
                     My food diary
                 </Typography>
                 <nav>
-                    <TextField size="small" id="username" label="Username" variant="outlined" type='text' value={username} onChange={(ev: { target: { value: React.SetStateAction<string>; }; }) => setUsername(ev.target.value)} required />
-                    <TextField size="small" id="password" label="Password" variant="outlined" type='text' value={password} onChange={(ev: { target: { value: React.SetStateAction<string>; }; }) => setPassword(ev.target.value)} required />
-                    <Button style={{ marginLeft: '5px' }} size="small" variant="outlined" onClick={async () => { login(username, password); }}>Login</Button>
-                    <Button style={{ marginLeft: '5px' }} size="small" variant="outlined" onClick={async () => { logout(); }}>Logout</Button>
+                    <TextField disabled={user && true} size="small" id="username" label="Username" variant="outlined" type='text' value={username} onChange={(ev: { target: { value: React.SetStateAction<string>; }; }) => setUsername(ev.target.value)} required />
+                    <TextField disabled={user && true} size="small" id="password" label="Password" variant="outlined" type='text' value={password} onChange={(ev: { target: { value: React.SetStateAction<string>; }; }) => setPassword(ev.target.value)} required />
+                    <Button disabled={user && true} style={{ marginLeft: '5px' }} size="small" variant="outlined" onClick={async () => { login(username, password); }}>Login</Button>
+                    <Button disabled={!user && true} style={{ marginLeft: '5px' }} size="small" variant="outlined" onClick={async () => { logout(); }}>Logout</Button>
                     {/*<Button style={{ marginLeft: '5px' }} size="small" variant="outlined" onClick={async () => { setShowSignup(!showSignup); }}>{!showSignup ? 'Show signup' : 'Hide signup'}</Button>*/}
                     {showSignup && <div style={{ marginTop: '10px' }}>                        
                         <TextField size="small" id="username" label="Username" variant="outlined" type='text' value={username} onChange={(ev: { target: { value: React.SetStateAction<string>; }; }) => setUsername(ev.target.value)} required />

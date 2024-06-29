@@ -27,7 +27,7 @@ const EditingModal: React.FC = () => {
         if (selectedDateObject) {
             setConsumables(selectedDateObject?.consumables);
         }
-      }, [selectedDateObject]);
+    }, [selectedDateObject]);
 
     const handleInputChange = (id: string, field: keyof Consumable, value: any) => {
         setConsumables(prevConsumables => 
@@ -43,7 +43,7 @@ const EditingModal: React.FC = () => {
     const handleSubmit = async () => {
         const response = await updateDateObject(dateSegment, consumables);
         if (response.success) {
-            console.log('success');
+            //console.log('success');
             handleClose();
         } else {
             alert(`Error with removing: ${response.message}`);
