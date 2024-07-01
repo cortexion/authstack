@@ -136,7 +136,7 @@ const AllDates = () => {
                     />*/}
                 </Container>
             </div>
-            {Object.entries(weeks).map(([key, { days, isExpanded }]: any, index) => {
+            {Object.entries(weeks).reverse().map(([key, { days, isExpanded }]: any, index) => {
                     let totalWeekEnergyKcal = 0;
                     let totalWeekProtein = 0;
                     let totalWeekCarb = 0;
@@ -174,7 +174,7 @@ const AllDates = () => {
                 
                 return (
                     <div key={key}>
-                    <h3>Week {index + 1} (starting day): {dayjs(startingDay).format('DD.MM.YYYY')}</h3>                    
+                    <h3>Week {Object.keys(weeks).length - index} (starting day): {dayjs(startingDay).format('DD.MM.YYYY')}</h3>                    
                     <div style={{ border: '1px solid black', borderRadius: '5px', padding: '15px', margin: '10px', boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)' }}>
                     {anyValueNotZero && <><b>Each day's kcals:</b><hr />
                     <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>

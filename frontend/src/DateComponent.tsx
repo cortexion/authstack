@@ -91,9 +91,9 @@ const DateComponent = () => {
 
     const pieChartData = [
         //{ id: 0, value: totalWeekEnergyKcal, label: `Energy ${totalWeekEnergyKcal } kcal`},
-        { id: 1, value: totalWeekProtein, label: `Protein ${totalWeekProtein } g`},
-        { id: 2, value: totalWeekCarb, label: `Carbohydrates ${totalWeekCarb } g`},
-        { id: 3, value: totalWeekFat, label: `Fat ${totalWeekCarb } g`},
+        { id: 1, value: totalWeekProtein, label: `Protein ${totalWeekProtein.toFixed(2) } g`},
+        { id: 2, value: totalWeekCarb, label: `Carbohydrates ${totalWeekCarb.toFixed(2) } g`},
+        { id: 3, value: totalWeekFat, label: `Fat ${totalWeekCarb.toFixed(2) } g`},
       ];
 
     return (
@@ -114,10 +114,10 @@ const DateComponent = () => {
                     </TableHead>
                     <TableBody>
                     <TableRow>
-                        <TableCell>{totalWeekEnergyKcal} kcal</TableCell>
-                        <TableCell>{totalWeekProtein} g</TableCell>
-                        <TableCell>{totalWeekCarb} g</TableCell>
-                        <TableCell>{totalWeekFat} g</TableCell>
+                        <TableCell>{totalWeekEnergyKcal.toFixed(2)} kcal</TableCell>
+                        <TableCell>{totalWeekProtein.toFixed(2)} g</TableCell>
+                        <TableCell>{totalWeekCarb.toFixed(2)} g</TableCell>
+                        <TableCell>{totalWeekFat.toFixed(2)} g</TableCell>
                     </TableRow>
                     </TableBody>
                 </Table>
