@@ -16,6 +16,7 @@ export const AuthContextProvider = ({ children }: any) => {
     const [user, setUser] = useState<any>(null);
     const [selectedDateObject, setSelectedDateObject] = useState<any>(null);
     const [dates, setDates] = useState<any[]>([]);
+    const [isCheckingItems, setIsCheckingItems] = useState<boolean>(false);
 
     const doHealthCheck = useCallback(async (authJwt: string) => {
         //console.log('doHealthCheck')
@@ -44,6 +45,7 @@ export const AuthContextProvider = ({ children }: any) => {
     }, []);
 
     const checkItems = useCallback(async () => {
+        setIsCheckingItems(true);
         try {
             const response = await fetch(`/api/manage/checkItems`, {
                 method: 'GET',
@@ -63,6 +65,8 @@ export const AuthContextProvider = ({ children }: any) => {
             console.log('checkHealth error: ', e);
             setUser(null);
             throw new Error((e as Error).message);
+        } finally {
+            setIsCheckingItems(false);
         }
     }, []);
 
@@ -222,7 +226,7 @@ export const AuthContextProvider = ({ children }: any) => {
             if (dates.length < 1) {
                 //fetchMovies();
             }
-            if (!user) {
+            if (!user && !isCheckingItems) {
                 checkItems();
             }
         })();
