@@ -230,7 +230,7 @@ export const AuthContextProvider = ({ children }: any) => {
                 checkItems();
             }
         })();
-    }, [user]);
+    }, [user, isCheckingItems]);
 
     return (
         <AuthContext.Provider value={{ dates, setDates, addConsumable, user, login, logout, selectedDateObject, setSelectedDateObject, updateDateObject }}>
