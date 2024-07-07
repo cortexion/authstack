@@ -221,7 +221,7 @@ export const AuthContextProvider = ({ children }: any) => {
                 //localStorage.removeItem('authjwt');
             }
         })();
-    }, [user]);
+    }, []);
 
     return (
         <AuthContext.Provider value={{ dates, setDates, addConsumable, user, login, logout, selectedDateObject, setSelectedDateObject, updateDateObject }}>
