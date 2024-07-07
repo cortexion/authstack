@@ -223,9 +223,9 @@ export const AuthContextProvider = ({ children }: any) => {
                 setUser(null);
                 //localStorage.removeItem('authjwt');
             }
-            if (dates.length < 1 && !isCheckingItems) {
+            /*if (dates.length < 1 && !isCheckingItems) {
                 checkItems();
-            }
+            }*/
         })();
     }, [user, isCheckingItems, dates, dates.length]);
 
