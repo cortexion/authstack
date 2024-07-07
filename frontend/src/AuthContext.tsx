@@ -215,16 +215,18 @@ export const AuthContextProvider = ({ children }: any) => {
                 setUser(authJwt);
                 doHealthCheck(authJwt);
                 getConsumables(authJwt);
-            } else {
-                checkItems();
+            } else {                
                 setUser(null);
                 //localStorage.removeItem('authjwt');
             }
             if (dates.length < 1) {
                 //fetchMovies();
             }
+            if (!user) {
+                checkItems();
+            }
         })();
-    }, []);
+    }, [user]);
 
     return (
         <AuthContext.Provider value={{ dates, setDates, addConsumable, user, login, logout, selectedDateObject, setSelectedDateObject, updateDateObject }}>
