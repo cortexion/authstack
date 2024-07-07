@@ -226,9 +226,9 @@ export const AuthContextProvider = ({ children }: any) => {
             if (dates.length < 1) {
                 //fetchMovies();
             }
-            if (!user && !isCheckingItems) {
+            /*if (!user && !isCheckingItems) {
                 checkItems();
-            }
+            }*/
         })();
     }, [user, isCheckingItems]);
 
