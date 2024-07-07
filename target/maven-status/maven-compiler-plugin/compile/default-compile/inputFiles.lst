@@ -11,6 +11,7 @@ c:\Users\eerik.anttila\Documents\authstack\src\main\java\com\example\demo\payloa
 c:\Users\eerik.anttila\Documents\authstack\src\main\java\com\example\demo\security\jwt\AuthEntryPointJwt.java
 c:\Users\eerik.anttila\Documents\authstack\src\main\java\com\example\demo\controllers\ConsumableController.java
 c:\Users\eerik.anttila\Documents\authstack\src\main\java\com\example\demo\security\jwt\JwtUtils.java
+c:\Users\eerik.anttila\Documents\authstack\src\main\java\com\example\demo\models\ApiResponse.java
 c:\Users\eerik.anttila\Documents\authstack\src\main\java\com\example\demo\models\User.java
 c:\Users\eerik.anttila\Documents\authstack\src\main\java\com\example\demo\payload\response\JwtResponse.java
 c:\Users\eerik.anttila\Documents\authstack\src\main\java\com\example\demo\security\services\UserDetailsImpl.java

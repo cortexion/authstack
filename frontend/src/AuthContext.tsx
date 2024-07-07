@@ -43,6 +43,29 @@ export const AuthContextProvider = ({ children }: any) => {
         }
     }, []);
 
+    const checkItems = useCallback(async () => {
+        try {
+            const response = await fetch(`/api/manage/checkItems`, {
+                method: 'GET',
+                headers: {
+                    //'Authorization': `Bearer ${authJwt}`
+                }
+            });
+            if (response.status === 401) {
+                const errorText = await response.text();
+                //alert("Error: " + errorText);
+                setUser(null);
+                localStorage.removeItem('authjwt');
+            } else {
+                console.log('checkItems response: ', await response.json());
+            }                
+        } catch (e) {
+            console.log('checkHealth error: ', e);
+            setUser(null);
+            throw new Error((e as Error).message);
+        }
+    }, []);
+
     const getConsumables = useCallback(async (authJwt: string) => {
         try {
             const response = await fetch(`/api/manage/consumables`, {
@@ -193,6 +216,7 @@ export const AuthContextProvider = ({ children }: any) => {
                 doHealthCheck(authJwt);
                 getConsumables(authJwt);
             } else {
+                checkItems();
                 setUser(null);
                 //localStorage.removeItem('authjwt');
             }

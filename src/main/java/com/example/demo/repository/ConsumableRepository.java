@@ -12,4 +12,6 @@ public interface ConsumableRepository extends JpaRepository<Consumable, Long> {
     List<Consumable> findByUserId(Long userId);
 
     List<Consumable> findByUserIdAndConsumedAtBetween(Long userId, LocalDateTime startDate, LocalDateTime endDate);
+
+    List<Consumable> findByConsumedAtBetween(LocalDateTime start, LocalDateTime end);
 }

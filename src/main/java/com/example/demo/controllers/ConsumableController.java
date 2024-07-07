@@ -1,6 +1,7 @@
 package com.example.demo.controllers;
 
 import com.example.demo.models.Consumable;
+import com.example.demo.models.ApiResponse;
 import com.example.demo.models.DailyConsumables;
 import com.example.demo.models.EditConsumablesRequest;
 import com.example.demo.models.ConsumableDTO;
@@ -45,6 +46,172 @@ public class ConsumableController {
     @GetMapping("/all")
     public String allAccess() {
         return "Public Content!";
+    }
+
+    @GetMapping(value = "/checkItems", produces = "application/json")
+    public ResponseEntity<?> hasConsumablesToday() {
+        LocalDate today = LocalDate.now();
+        LocalDateTime startOfToday = today.atStartOfDay();
+        LocalDateTime endOfToday = today.atTime(LocalTime.MAX);
+
+        List<Consumable> consumables = consumableRepository.findByConsumedAtBetween(startOfToday, endOfToday);
+        boolean hasConsumablesToday = !consumables.isEmpty();
+
+        if (!hasConsumablesToday) {
+            try {
+                addHardcodedConsumables();
+                return new ResponseEntity<>(new ApiResponse("Hardcoded consumables added successfully"), HttpStatus.OK);
+            } catch (Exception e) {
+                return new ResponseEntity<>(new ApiResponse("Failed to add hardcoded consumables"),
+                        HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } else {
+            return new ResponseEntity<>(new ApiResponse("No need for updating"), HttpStatus.OK);
+        }
+
+        // return new ResponseEntity<>(consumables, HttpStatus.OK);
+    }
+
+    private void addHardcodedConsumables() {
+        List<Consumable> hardcodedConsumables = new ArrayList<>();
+        User testUser = new User(); // Assuming a test user
+        testUser.setId(1L);
+
+        LocalDateTime now = LocalDateTime.now();
+
+        hardcodedConsumables.add(new Consumable("Kana", 188.32, 20.25, 0.0, 12.0, 300.0, now.minusDays(0), testUser));
+        hardcodedConsumables.add(
+                new Consumable("Riisi, keitetty, suolaa", 101.58, 1.8, 22.44, 0.21, 100.0, now.minusDays(0), testUser));
+
+        hardcodedConsumables.add(new Consumable("Kana", 188.32, 20.25, 0.0, 12.0, 100.0, now.minusDays(1), testUser));
+        hardcodedConsumables
+                .add(new Consumable("Riisi-kauraseos", 374.1, 10.87, 69.49, 4.13, 200.0, now.minusDays(1), testUser));
+
+        hardcodedConsumables.add(new Consumable("Kana", 188.32, 20.25, 0.0, 12.0, 100.0, now.minusDays(2), testUser));
+        hardcodedConsumables
+                .add(new Consumable("Riisi-maissikakku", 364.33, 7.45, 73.64, 2.61, 100.0, now.minusDays(2), testUser));
+
+        hardcodedConsumables.add(new Consumable("Kana", 188.32, 20.25, 0.0, 12.0, 300.0, now.minusDays(3), testUser));
+        hardcodedConsumables.add(
+                new Consumable("Riisi, keitetty, suolaa", 101.58, 1.8, 22.44, 0.21, 100.0, now.minusDays(3), testUser));
+
+        hardcodedConsumables.add(new Consumable("Kana, keitetty, suolaton", 218.97, 23.55, 0.0, 13.95, 190.0,
+                now.minusDays(4), testUser));
+        hardcodedConsumables.add(
+                new Consumable("Kananmuna, keitetty", 134.11, 12.61, 0.3, 9.24, 120.0, now.minusDays(4), testUser));
+        hardcodedConsumables
+                .add(new Consumable("Riisi-maissikakku", 364.33, 7.45, 73.64, 2.61, 100.0, now.minusDays(4), testUser));
+
+        hardcodedConsumables.add(new Consumable("Kana", 188.32, 20.25, 0.0, 12.0, 300.0, now.minusDays(5), testUser));
+        hardcodedConsumables.add(
+                new Consumable("Riisi, keitetty, suolaa", 101.58, 1.8, 22.44, 0.21, 100.0, now.minusDays(5), testUser));
+
+        hardcodedConsumables.add(new Consumable("Kana, keitetty, suolaton", 218.97, 23.55, 0.0, 13.95, 300.0,
+                now.minusDays(6), testUser));
+        hardcodedConsumables
+                .add(new Consumable("Riisi-maissikakku", 364.33, 7.45, 73.64, 2.61, 100.0, now.minusDays(6), testUser));
+
+        hardcodedConsumables.add(new Consumable("Kanakeitto, perunaa ja kasviksia", 86.28, 8.05, 3.19, 4.45, 300.0,
+                now.minusDays(7), testUser));
+
+        hardcodedConsumables.add(new Consumable("Kana", 188.32, 20.25, 0.0, 12.0, 100.0, now.minusDays(8), testUser));
+        hardcodedConsumables
+                .add(new Consumable("Riisi-maissikakku", 364.33, 7.45, 73.64, 2.61, 200.0, now.minusDays(8), testUser));
+
+        hardcodedConsumables.add(new Consumable("Kana, keitetty, suolaton", 218.97, 23.55, 0.0, 13.95, 300.0,
+                now.minusDays(9), testUser));
+        hardcodedConsumables.add(
+                new Consumable("Riisi, keitetty, suolaa", 101.58, 1.8, 22.44, 0.21, 100.0, now.minusDays(9), testUser));
+
+        hardcodedConsumables.add(new Consumable("Kana", 188.32, 20.25, 0.0, 12.0, 200.0, now.minusDays(10), testUser));
+        hardcodedConsumables.add(
+                new Consumable("Riisi-maissikakku", 364.33, 7.45, 73.64, 2.61, 150.0, now.minusDays(10), testUser));
+
+        hardcodedConsumables.add(new Consumable("Kana", 188.32, 20.25, 0.0, 12.0, 230.0, now.minusDays(11), testUser));
+        hardcodedConsumables.add(
+                new Consumable("Riisi-maissikakku", 364.33, 7.45, 73.64, 2.61, 100.0, now.minusDays(11), testUser));
+
+        hardcodedConsumables.add(new Consumable("Kana, keitetty, suolaton", 218.97, 23.55, 0.0, 13.95, 200.0,
+                now.minusDays(12), testUser));
+        hardcodedConsumables
+                .add(new Consumable("Riisi-kauraseos", 374.1, 10.87, 69.49, 4.13, 200.0, now.minusDays(12), testUser));
+
+        hardcodedConsumables.add(new Consumable("Kana-vuohenjuustopasta, hk via, valmisateria", 122.58, 8.37, 9.85,
+                5.11, 300.0, now.minusDays(13), testUser));
+        hardcodedConsumables.add(new Consumable("Riisi, keitetty, suolaa", 101.58, 1.8, 22.44, 0.21, 100.0,
+                now.minusDays(13), testUser));
+
+        hardcodedConsumables.add(new Consumable("Kanakeitto, perunaa ja kasviksia", 86.28, 8.05, 3.19, 4.45, 300.0,
+                now.minusDays(14), testUser));
+
+        hardcodedConsumables.add(new Consumable("Kana", 188.32, 20.25, 0.0, 12.0, 230.0, now.minusDays(15), testUser));
+        hardcodedConsumables.add(new Consumable("Kanakeitto, perunaa ja kasviksia", 86.28, 8.05, 3.19, 4.45, 200.0,
+                now.minusDays(15), testUser));
+
+        hardcodedConsumables.add(new Consumable("Kana", 188.32, 20.25, 0.0, 12.0, 330.0, now.minusDays(16), testUser));
+        hardcodedConsumables.add(new Consumable("Riisi, keitetty, suolaa", 101.58, 1.8, 22.44, 0.21, 100.0,
+                now.minusDays(16), testUser));
+
+        hardcodedConsumables.add(
+                new Consumable("Kana, keitetty, suolaa", 239.94, 25.8, 0.0, 15.29, 400.0, now.minusDays(17), testUser));
+        hardcodedConsumables
+                .add(new Consumable("Riisi-kauraseos", 374.1, 10.87, 69.49, 4.13, 200.0, now.minusDays(17), testUser));
+
+        hardcodedConsumables.add(new Consumable("Kana", 188.32, 20.25, 0.0, 12.0, 230.0, now.minusDays(18), testUser));
+        hardcodedConsumables.add(new Consumable("Riisi, keitetty, suolaa", 101.58, 1.8, 22.44, 0.21, 100.0,
+                now.minusDays(18), testUser));
+
+        hardcodedConsumables.add(new Consumable("Kana", 188.32, 20.25, 0.0, 12.0, 130.0, now.minusDays(19), testUser));
+        hardcodedConsumables
+                .add(new Consumable("Riisi-kauraseos", 374.1, 10.87, 69.49, 4.13, 200.0, now.minusDays(19), testUser));
+
+        hardcodedConsumables.add(new Consumable("Kana", 188.32, 20.25, 0.0, 12.0, 300.0, now.minusDays(20), testUser));
+        hardcodedConsumables.add(new Consumable("Riisi, keitetty, suolaa", 101.58, 1.8, 22.44, 0.21, 100.0,
+                now.minusDays(20), testUser));
+
+        hardcodedConsumables.add(new Consumable("Kana, keitetty, suolaton", 218.97, 23.55, 0.0, 13.95, 220.0,
+                now.minusDays(21), testUser));
+        hardcodedConsumables.add(new Consumable("Riisi, keitetty, suolaa", 101.58, 1.8, 22.44, 0.21, 200.0,
+                now.minusDays(21), testUser));
+
+        hardcodedConsumables.add(new Consumable("Kana", 188.32, 20.25, 0.0, 12.0, 300.0, now.minusDays(22), testUser));
+        hardcodedConsumables.add(new Consumable("Riisi, keitetty, suolaa", 101.58, 1.8, 22.44, 0.21, 100.0,
+                now.minusDays(22), testUser));
+
+        hardcodedConsumables.add(
+                new Consumable("Kana, keitetty, suolaa", 239.94, 25.8, 0.0, 15.29, 300.0, now.minusDays(23), testUser));
+        hardcodedConsumables.add(new Consumable("Riisi, keitetty, suolaa", 101.58, 1.8, 22.44, 0.21, 200.0,
+                now.minusDays(23), testUser));
+
+        hardcodedConsumables.add(
+                new Consumable("Kana, keitetty, suolaa", 239.94, 25.8, 0.0, 15.29, 300.0, now.minusDays(24), testUser));
+        hardcodedConsumables.add(
+                new Consumable("Riisi-maissikakku", 364.33, 7.45, 73.64, 2.61, 200.0, now.minusDays(24), testUser));
+
+        hardcodedConsumables.add(new Consumable("Kana, keitetty, suolaton", 218.97, 23.55, 0.0, 13.95, 400.0,
+                now.minusDays(25), testUser));
+        hardcodedConsumables.add(
+                new Consumable("Riisi-maissikakku", 364.33, 7.45, 73.64, 2.61, 300.0, now.minusDays(25), testUser));
+
+        hardcodedConsumables.add(new Consumable("Kana, keitetty, suolaton", 218.97, 23.55, 0.0, 13.95, 200.0,
+                now.minusDays(26), testUser));
+        hardcodedConsumables.add(
+                new Consumable("Riisi-maissikakku", 364.33, 7.45, 73.64, 2.61, 200.0, now.minusDays(26), testUser));
+
+        hardcodedConsumables.add(new Consumable("Kana", 188.32, 20.25, 0.0, 12.0, 400.0, now.minusDays(27), testUser));
+        hardcodedConsumables
+                .add(new Consumable("Riisi-kauraseos", 374.1, 10.87, 69.49, 4.13, 200.0, now.minusDays(27), testUser));
+
+        hardcodedConsumables.add(new Consumable("Kana, keitetty, suolaton", 218.97, 23.55, 0.0, 13.95, 300.0,
+                now.minusDays(28), testUser));
+        hardcodedConsumables
+                .add(new Consumable("Riisi-kauraseos", 374.1, 10.87, 69.49, 4.13, 200.0, now.minusDays(28), testUser));
+
+        hardcodedConsumables.add(new Consumable("Kana", 188.32, 20.25, 0.0, 12.0, 350.0, now.minusDays(29), testUser));
+        hardcodedConsumables
+                .add(new Consumable("Riisi-kauraseos", 374.1, 10.87, 69.49, 4.13, 250.0, now.minusDays(19), testUser));
+
+        consumableRepository.saveAll(hardcodedConsumables);
     }
 
     @GetMapping(value = "/consumables", produces = "application/json")
