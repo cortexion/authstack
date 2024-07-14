@@ -59,8 +59,10 @@ public class ConsumableController {
 
         if (!hasConsumablesToday) {
             try {
-                addHardcodedConsumables();
-                return new ResponseEntity<>(new ApiResponse("Hardcoded consumables added successfully"), HttpStatus.OK);
+                removeAndAddHardcodedConsumables();
+                // return new ResponseEntity<>(new ApiResponse("Hardcoded consumables added
+                // successfully"), HttpStatus.OK);
+                return new ResponseEntity<>(consumables, HttpStatus.OK);
             } catch (Exception e) {
                 return new ResponseEntity<>(new ApiResponse("Failed to add hardcoded consumables"),
                         HttpStatus.INTERNAL_SERVER_ERROR);
@@ -72,7 +74,9 @@ public class ConsumableController {
         // return new ResponseEntity<>(consumables, HttpStatus.OK);
     }
 
-    private void addHardcodedConsumables() {
+    private void removeAndAddHardcodedConsumables() {
+        consumableRepository.deleteAll();
+
         List<Consumable> hardcodedConsumables = new ArrayList<>();
         User testUser = new User(); // Assuming a test user
         testUser.setId(1L);

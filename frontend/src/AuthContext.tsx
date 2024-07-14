@@ -51,17 +51,16 @@ export const AuthContextProvider = ({ children }: any) => {
                     //'Authorization': `Bearer ${authJwt}`
                 }
             });
-            if (response.status === 401) {
-                const errorText = await response.text();
-                //alert("Error: " + errorText);
-                setUser(null);
-                localStorage.removeItem('authjwt');
-            } else {
-                console.log('checkItems response: ', await response.json());
-            }                
+            const datesJson = await response.json();
+            //console.log('getConsumables: ', consumablesJson);
+            const newDates = datesJson?.map((date: any) => {
+                date.isExpanded = false;
+                return date;
+            })
+            setDates(newDates);
         } catch (e) {
-            console.log('checkHealth error: ', e);
-            setUser(null);
+            console.log('checkItems error: ', e);
+            //setUser(null);
             throw new Error((e as Error).message);
         }
     }, []);
@@ -216,7 +215,7 @@ export const AuthContextProvider = ({ children }: any) => {
                 setUser(authJwt);
                 doHealthCheck(authJwt);
                 getConsumables(authJwt);
-            } else {                
+            } else {
                 setUser(null);
                 //localStorage.removeItem('authjwt');
             }

@@ -94,8 +94,13 @@ const AllDates = () => {
         setWeeks(newWeeks);
     };
 
-    const seriesData = Object.values(weeks).map((week: any) => week.weightedAverageEnergy);
-    const xAxisData = Object.keys(weeks).map(week => week.toUpperCase());
+    const weightedAverageEnergySum: any = Object.values(weeks).reduce((total, week: any) => total + week.weightedAverageEnergy, 0);
+    const seriesData = Object.values(weeks).map((week: any) => ({
+        value: (week.weightedAverageEnergy / weightedAverageEnergySum) * 100,
+        label: `${((week.weightedAverageEnergy / weightedAverageEnergySum) * 100).toFixed(2)}%`,
+    }));
+    const xAxisData = Object.keys(weeks).map((week, index) => `Week ${index+1}, ${dayjs(week).format('DD.MM.YYYY')}`);
+    //const xAxisData = Object.keys(weeks).map((week, index) => `Week ${index + 1}, starting day: ${week.toUpperCase()}`);
 
     return (
         <Container maxWidth="md" component="main">
@@ -109,7 +114,10 @@ const AllDates = () => {
                 <Container component="div" style={{ display: 'contents' }}>
                     <BarChart
                         series={[
-                        { data: seriesData },
+                            { 
+                            data: seriesData.map(item => item.value),
+                            label: 'Weighted Average Energy (%)',
+                            },
                         ]}
                         height={290}
                         xAxis={[{ data: xAxisData, scaleType: 'band' }]}
@@ -153,11 +161,6 @@ const AllDates = () => {
                     totalWeekFat += totalFat;
                 })
 
-                let startingDay = key;
-                if (index === 0) {
-                    startingDay = days[0].date;
-                }
-
                 const weekResult = days.map((day: any, index: number) => {
                     const totalEnergyKcal = day.consumables.reduce((total: any, consumable: any) => total + (consumable.energyKcal * consumable.amount / 100), 0);
                     totalWeekEnergyKcal += totalEnergyKcal;
@@ -168,15 +171,14 @@ const AllDates = () => {
                     })
                 });
 
-                //console.log('weekResult: ', weekResult)
-
                 const anyValueNotZero = weekResult.some((item: any) => item.value !== 0);
                 
                 return (
                     <div key={key}>
-                    <h3>Week {Object.keys(weeks).length - index} (starting day): {dayjs(startingDay).format('DD.MM.YYYY')}</h3>                    
+                    <h3>Week {Object.keys(weeks).length - index} (starting day): {dayjs(days[0].date).format('DD.MM.YYYY')}</h3>                    
                     <div style={{ border: '1px solid black', borderRadius: '5px', padding: '15px', margin: '10px', boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)' }}>
                     {anyValueNotZero && <><b>Each day's kcals:</b><hr />
+                    <div>Change chart type here</div>                
                     <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
                     <PieChart
                         series={[{ data: weekResult }]}
@@ -204,9 +206,9 @@ const AllDates = () => {
                             <TableHead>
                             <TableRow>
                                 <TableCell><b>Energy:</b></TableCell>
-                                <TableCell><b>Protein</b></TableCell>
-                                <TableCell><b>Carb</b></TableCell>
-                                <TableCell><b>Fat</b></TableCell>
+                                <TableCell><b>Protein:</b></TableCell>
+                                <TableCell><b>Carb:</b></TableCell>
+                                <TableCell><b>Fat:</b></TableCell>
                             </TableRow>
                             </TableHead>
                             <TableBody>
@@ -250,12 +252,13 @@ const AllDates = () => {
                                         onClick={() => { handleIsExpandedDate(dayItem.date) }}
                                         variant="contained"
                                         sx={{
-                                        padding: '6px 10px', fontSize: '0.85rem', backgroundColor: '#4ba34e', color: 'white',
+                                        marginBottom: '5px', padding: '6px 10px', fontSize: '0.85rem', backgroundColor: '#4ba34e', color: 'white',
                                         '&:hover': { backgroundColor: '#388e3c' }, marginTop: '10px', borderRadius: '10px',
                                         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)', textTransform: 'none'
                                         }}>
                                         Click to hide this day's food
                                     </Button>
+                                    <hr /><b>🍽️ Food/drink consumed today:</b><hr />
                                     <TableContainer component={Paper} style={{ marginTop: '10px' }}>
                                         <Table>
                                         <TableHead>
@@ -293,7 +296,7 @@ const AllDates = () => {
                                     <div>
                                     <Button onClick={() => { handleIsExpandedDate(dayItem.date) }} variant="contained"
                                         sx={{
-                                        padding: '6px 10px', fontSize: '0.85rem', backgroundColor: '#4ba34e', color: 'white',
+                                        marginBottom: '5px', padding: '6px 10px', fontSize: '0.85rem', backgroundColor: '#4ba34e', color: 'white',
                                         '&:hover': { backgroundColor: '#388e3c' }, marginTop: '10px', borderRadius: '10px',
                                         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)', textTransform: 'none'
                                         }}>
@@ -305,15 +308,15 @@ const AllDates = () => {
                                 </div>
                                 {!!dayItem.consumables.length && (
                                 <div style={{ marginTop: '10px', borderTop: '0px solid gray' }}>
-                                    <b>Day's totals:</b><hr />
+                                    <b>📉 Day's totals:</b><hr />
                                     <TableContainer component={Paper}>
                                     <Table>
                                         <TableHead>
                                         <TableRow>
-                                            <TableCell><b>Energy</b></TableCell>
-                                            <TableCell><b>Protein</b></TableCell>
-                                            <TableCell><b>Carb</b></TableCell>
-                                            <TableCell><b>Fat</b></TableCell>
+                                            <TableCell><b>Energy:</b></TableCell>
+                                            <TableCell><b>Protein:</b></TableCell>
+                                            <TableCell><b>Carb:</b></TableCell>
+                                            <TableCell><b>Fat:</b></TableCell>
                                         </TableRow>
                                         </TableHead>
                                         <TableBody>

@@ -98,10 +98,9 @@ const DateComponent = () => {
 
     return (
         <Container maxWidth="md" component="main">
-            <Typography variant="h5" style={{marginTop: '20px'}}>Date: {dayjs(date).format('DD.MM.YYYY')}</Typography>
             {/*JSON.stringify(selectedDateObject)*/}
-            {!!consumables.length && <div style={{border: '1px solid black', backgroundColor: 'rgb(231, 231, 231)', borderRadius: '5px', padding: '15px', margin: '10px', boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}>
-                <b>4 week's totals:</b><hr></hr>
+            {!!consumables.length && <div style={{border: '1px solid black', marginTop: '40px', backgroundColor: 'rgb(231, 231, 231)', borderRadius: '5px', padding: '15px', margin: '10px', boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}>
+            <Typography variant="h6" style={{marginTop: '0px'}}>Date: {dayjs(date).format('DD.MM.YYYY')}</Typography><hr></hr>
                 <TableContainer component={Paper} style={{ marginTop: '10px' }}>
                 <Table>
                     <TableHead>
@@ -144,7 +143,7 @@ const DateComponent = () => {
                         />
                     </div>
             </div>}            
-            <Typography variant="h6">Consumables:</Typography>
+            <Typography variant="h6" style={{marginTop: '30px'}}>Consumables:</Typography>
             {!!consumables.length ? (
             <TableContainer component={Paper} style={{ marginBottom: '2rem' }}>
                 <Table>
