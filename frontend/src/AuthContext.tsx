@@ -10,12 +10,19 @@ export const AuthContext = createContext<any>({
     login: () => { },
     logout: () => { },
 });
+
+enum ChartType {
+    Bar = 'Bar',
+    Pie = 'Pie',
+}
+
 export const useAuthContext = () => useContext(AuthContext);
 export const AuthContextProvider = ({ children }: any) => {
     let navigate = useNavigate();
     const [user, setUser] = useState<any>(null);
     const [selectedDateObject, setSelectedDateObject] = useState<any>(null);
     const [dates, setDates] = useState<any[]>([]);
+    const [chartType, setChartType] = useState<ChartType>(ChartType.Bar);
 
     const doHealthCheck = useCallback(async (authJwt: string) => {
         //console.log('doHealthCheck')
@@ -223,7 +230,7 @@ export const AuthContextProvider = ({ children }: any) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ dates, setDates, addConsumable, user, login, logout, selectedDateObject, setSelectedDateObject, updateDateObject }}>
+        <AuthContext.Provider value={{ dates, setDates, addConsumable, chartType, setChartType, ChartType, user, login, logout, selectedDateObject, setSelectedDateObject, updateDateObject }}>
             {children}
         </AuthContext.Provider>
     );

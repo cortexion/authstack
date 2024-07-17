@@ -16,12 +16,16 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Paper
+    Paper,
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel,
   } from '@mui/material';
 
 const AllDates = () => {
     const navigate = useNavigate();
-    const { dates, setDates, user } = useAuthContext();
+    const { dates, setDates, user, chartType, setChartType, ChartType } = useAuthContext();
     const [weeks, setWeeks] = useState({});
 
     const calculateWeeks = useCallback(() => {
@@ -94,6 +98,10 @@ const AllDates = () => {
         setWeeks(newWeeks);
     };
 
+    const handleChartTypeChange = (event: any) => {
+        setChartType(event.target.value);
+    };
+
     const weightedAverageEnergySum: any = Object.values(weeks).reduce((total, week: any) => total + week.weightedAverageEnergy, 0);
     const seriesData = Object.values(weeks).map((week: any) => ({
         value: (week.weightedAverageEnergy / weightedAverageEnergySum) * 100,
@@ -107,6 +115,7 @@ const AllDates = () => {
             {user && '↖️ Try adding a new food with that button' }
             <Typography variant="h4" component="h1" gutterBottom>                
                 {user ? 'Consumables List' : 'Login first! Just click LOGIN right there ↗️'}
+                {!dates.length && <div>Refresh the page!</div>}
             </Typography>
             {user && <div><div style={{ border: '1px solid black', borderRadius: '5px', padding: '15px', margin: '10px', boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)' }}>
                 <b>{weeks && Object.keys(weeks).length} week's totals ({dates.length} days): </b><hr></hr>
@@ -172,34 +181,69 @@ const AllDates = () => {
                 });
 
                 const anyValueNotZero = weekResult.some((item: any) => item.value !== 0);
+
+                const dailyEnergyResults = days.map((day: any, index: number) => {
+                    const totalEnergyKcal = day.consumables.reduce((total: any, consumable: any) => total + (consumable.energyKcal * consumable.amount / 100), 0);
+                    totalWeekEnergyKcal += totalEnergyKcal;
+                    return {
+                        id: index,
+                        value: totalEnergyKcal,
+                        label: dayjs(day.date).format('DD.MM.YYYY'),
+                    };
+                });
+                
+                const dailyXAxisData = dailyEnergyResults.map((result: any) => result.label);
+                const dailySeriesData = dailyEnergyResults.map((result: any) => result.value);
                 
                 return (
-                    <div key={key}>
-                    <h3>Week {Object.keys(weeks).length - index} (starting day): {dayjs(days[0].date).format('DD.MM.YYYY')}</h3>                    
-                    <div style={{ border: '1px solid black', borderRadius: '5px', padding: '15px', margin: '10px', boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)' }}>
-                    {anyValueNotZero && <><b>Each day's kcals:</b><hr />
-                    <div>Change chart type here</div>                
-                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-                    <PieChart
-                        series={[{ data: weekResult }]}
-                        width={500}
-                        height={300}
-                        margin={{ left: 0, right: 0, top: 10, bottom: 110 }}
-                        slotProps={{
-                            legend: {
-                                labelStyle: {
-                                    tableLayout: 'fixed',
-                                },
-                                direction: 'row',
-                                position: {
-                                    horizontal: 'middle',
-                                    vertical: 'bottom',
-                                },
+                <div key={key}>
+                <h3>Week {Object.keys(weeks).length - index} (starting day): {dayjs(days[0].date).format('DD.MM.YYYY')}</h3>                    
+                <div style={{ border: '1px solid black', borderRadius: '5px', padding: '15px', margin: '10px', boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)' }}>
+                {anyValueNotZero && <><b>Each day's kcals:</b><hr /><InputLabel sx={{ fontSize: '0.95rem', }} id="chart-type-select-label">Select Chart Type:</InputLabel>
+                <div><FormControl variant="outlined" sx={{minWidth: '10rem',}}>
+                <Select
+                    id="chart-type-select"
+                    value={chartType}
+                    onChange={handleChartTypeChange}
+                    displayEmpty
+                    sx={{}}
+                >
+                    <MenuItem value={ChartType.Bar}>Bar Chart</MenuItem>
+                    <MenuItem value={ChartType.Pie}>Pie Chart</MenuItem>
+                </Select>
+            </FormControl></div>
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '0px' }}>
+                {chartType === ChartType.Bar && (<BarChart
+                    xAxis={[{ data: dailyXAxisData, scaleType: 'band' }]}
+                    series={[
+                        {
+                            data: dailySeriesData,
+                            label: 'Daily Energy (kcal)',
+                        },
+                    ]}
+                    width={500}
+                    height={300}
+                />)}
+                {chartType === ChartType.Pie && (<PieChart
+                    series={[{ data: weekResult }]}
+                    width={500}
+                    height={300}
+                    margin={{ left: 0, right: 0, top: 10, bottom: 110 }}
+                    slotProps={{
+                        legend: {
+                            labelStyle: {
+                                tableLayout: 'fixed',
                             },
-                        }}
-                        sx={{}}
-                    /></div></>                    
-                    }
+                            direction: 'row',
+                            position: {
+                                horizontal: 'middle',
+                                vertical: 'bottom',
+                            },
+                        },
+                    }}
+                    sx={{}}
+                    />)}
+                    </div></>}
                         <b>Week's totals:</b><hr />
                         {anyValueNotZero ? <TableContainer component={Paper} style={{ marginTop: '10px' }}>
                         <Table>
