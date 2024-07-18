@@ -65,6 +65,10 @@ export const AuthContextProvider = ({ children }: any) => {
                 return date;
             })
             setDates(newDates);
+            const authJwt = localStorage.getItem('authjwt');
+            if (authJwt) {
+                getConsumables(authJwt);
+            }
         } catch (e) {
             console.log('checkItems error: ', e);
             //setUser(null);
