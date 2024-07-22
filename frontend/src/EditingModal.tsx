@@ -19,13 +19,23 @@ const EditingModal: React.FC = () => {
     const { selectedDateObject, updateDateObject } = useAuthContext();
     const [open, setOpen] = useState(false);
     const [consumables, setConsumables] = useState<Consumable[]>(selectedDateObject?.consumables || []);
+    const [initialConsumables, setInitialConsumables] = useState<Consumable[]>(selectedDateObject?.consumables || []);
 
     const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const handleClose = () => {
+        if (hasChanges()) {
+            if (window.confirm("You have unsaved changes. Are you sure you want to close?")) {
+                setOpen(false);
+            }
+        } else {
+            setOpen(false);
+        }
+    };
 
     useEffect(() => {
         if (selectedDateObject) {
             setConsumables(selectedDateObject?.consumables);
+            setInitialConsumables(selectedDateObject?.consumables);
         }
     }, [selectedDateObject]);
 
@@ -37,13 +47,17 @@ const EditingModal: React.FC = () => {
         );
     };
 
+    const hasChanges = () => {
+        return JSON.stringify(consumables) !== JSON.stringify(initialConsumables);
+    };
+
     const pathSegments = location.pathname.split('/');
     const dateSegment = pathSegments[pathSegments.length - 1];
 
     const handleSubmit = async () => {
         const response = await updateDateObject(dateSegment, consumables);
         if (response.success) {
-            //console.log('success');
+            setInitialConsumables(consumables);
             handleClose();
         } else {
             alert(`Error with removing: ${response.message}`);
@@ -52,14 +66,14 @@ const EditingModal: React.FC = () => {
 
     return (
         <>
-            {!!consumables.length && <Button 
+            {/*!!consumables.length && <Button 
                 onClick={handleOpen} 
                 variant="contained" 
-                color="primary" 
+                color="primary"
                 style={{ }}
             >
                 Edit Date
-            </Button>}
+            </Button>*/}
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -86,6 +100,7 @@ const EditingModal: React.FC = () => {
                             marginBottom: '20px',
                             color: '#fff',
                         }}
+                        disabled={!hasChanges()}
                     >
                         Save changes
                     </Button>

@@ -59,12 +59,13 @@ export const AuthContextProvider = ({ children }: any) => {
                 }
             });
             const datesJson = await response.json();
-            //console.log('getConsumables: ', consumablesJson);
-            const newDates = datesJson?.map((date: any) => {
-                date.isExpanded = false;
-                return date;
-            })
+            if (datesJson.consumables) {
+                const newDates = datesJson?.map((date: any) => {
+                    date.isExpanded = false;
+                    return date;
+                })
             setDates(newDates);
+            }
             const authJwt = localStorage.getItem('authjwt');
             if (authJwt) {
                 getConsumables(authJwt);
