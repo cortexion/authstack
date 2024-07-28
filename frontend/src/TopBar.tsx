@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import { useAuthContext } from './AuthContext';
 import { Modal, Paper, TextField, Typography } from '@mui/material';
-import AddNewModal from './AddNewModal';
+import LowerTopBar from './LowerTopBar';
 import EditingModal from './EditingModal';
 
 
@@ -62,7 +62,7 @@ const TopBar = () => {
         >
             <Toolbar sx={{ flexWrap: 'wrap' }}>
                 <nav>
-                <AddNewModal />{location.state ? <div style={{ display: 'inline', marginLeft: '5px' }}><EditingModal /></div> : null}            
+                <LowerTopBar />{location.state ? <div style={{ display: 'inline', marginLeft: '5px' }}><EditingModal /></div> : null}            
                 </nav>
             </Toolbar>
         </AppBar>

@@ -38,7 +38,7 @@ const DateComponent = () => {
     const date = location.state?.date || 'Date not available';
     const [removedConsumables, setRemovedConsumables] = useState<Consumable[]>([]);
     const [editedConsumables, setEditedConsumables] = useState<Consumable[]>([]);
-    const consumables = selectedDateObject?.consumables || [];
+    const [consumables, setConsumables] = useState<Consumable[]>([]);
 
     const pathSegments = location.pathname.split('/');
     const dateSegment = pathSegments[pathSegments.length - 1];
@@ -47,6 +47,12 @@ const DateComponent = () => {
     const [itemToRemove, setItemToRemove] = useState<any>(null);
     const [editMode, setEditMode] = useState(false);
     const [isSavingAfterRemoving, setIsSavingAfterRemoving] = useState(false);
+
+    useEffect(() => {
+        if (selectedDateObject?.consumables) {
+            setConsumables(selectedDateObject?.consumables)
+        }        
+    }, [selectedDateObject]);
 
     useEffect(() => {
         if (!user) {
@@ -107,7 +113,7 @@ const DateComponent = () => {
         if (response.success) {
             setSelectedDateObject({ ...selectedDateObject, consumables: editedConsumables });
             setEditMode(false);
-            alert("Changes saved successfully!");
+            //alert("Changes saved successfully!");
         } else {
             alert(`Error with saving changes: ${response.message}`);
         }
@@ -125,10 +131,10 @@ const DateComponent = () => {
     let totalWeekFat = 0;
 
     editedConsumables.forEach((dayItem: Consumable) => {
-        totalWeekEnergyKcal += dayItem.energyKcal;
-        totalWeekProtein += dayItem.protein;
-        totalWeekCarb += dayItem.carb;
-        totalWeekFat += dayItem.fat;
+        totalWeekEnergyKcal += dayItem.energyKcal * (dayItem.amount / 100);
+        totalWeekProtein += dayItem.protein * (dayItem.amount / 100);
+        totalWeekCarb += dayItem.carb * (dayItem.amount / 100);
+        totalWeekFat += dayItem.fat * (dayItem.amount / 100);
     });
 
     const pieChartData = [
@@ -138,7 +144,7 @@ const DateComponent = () => {
     ];
 
     return (
-        <Container maxWidth="md" component="main">{JSON.stringify(isSavingAfterRemoving)}
+        <Container maxWidth="md" component="main">{/*JSON.stringify(isSavingAfterRemoving)*/}
             {!!consumables.length && (
                 <div style={{
                     border: '1px solid black',
@@ -219,12 +225,13 @@ const DateComponent = () => {
                                     </TableCell>
                                     <TableCell>{item.id}</TableCell>
                                     <TableCell>
-                                        {editMode ? (
+                                        {/*editMode ? (
                                             <TextField
                                                 value={item.name}
                                                 onChange={(e) => handleInputChange(item.id, 'name', e.target.value)}
                                             />
-                                        ) : item.name}
+                                        ) : item.name*/}
+                                        {item.name}
                                     </TableCell>
                                     <TableCell>
                                         {editMode ? (
@@ -280,7 +287,7 @@ const DateComponent = () => {
                 <Typography variant="body1">No consumables available.</Typography>
             )}
 
-            <Button variant="contained" color="secondary" onClick={handleToggleEditMode}>
+            <Button variant="outlined" onClick={handleToggleEditMode}>
                 {editMode ? 'Disable Editing' : 'Enable Editing'}
             </Button>
 
@@ -295,20 +302,53 @@ const DateComponent = () => {
                 </Button>
             )}
 
-            <Dialog open={modalOpen} onClose={handleCloseModal}>
-                <DialogTitle>Confirm Deletion</DialogTitle>
+            <Dialog 
+                open={modalOpen} 
+                onClose={handleCloseModal} 
+                sx={{
+                    '& .MuiDialog-paper': {
+                    padding: 2,
+                    borderRadius: 2,
+                    backgroundColor: '#f5f5f5',
+                    }
+                }}
+                >
+                <DialogTitle sx={{ fontWeight: 'bold', color: '#1976d2' }}>Confirm Deletion</DialogTitle>
                 <DialogContent>
-                    <Typography>Are you sure you want to delete?</Typography>
+                    <Typography sx={{ fontSize: '1rem', color: '#333' }}>
+                    Are you sure you want to delete?
+                    </Typography>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCloseModal} color="primary">
-                        Cancel
+                    <Button 
+                    onClick={handleCloseModal} 
+                    color="primary" 
+                    sx={{
+                        textTransform: 'none',
+                        color: '#1976d2',
+                        '&:hover': {
+                        backgroundColor: '#e3f2fd',
+                        }
+                    }}
+                    >
+                    Cancel
                     </Button>
-                    <Button onClick={() => {handleConfirmRemove();}} color="primary" variant="contained">
-                        Confirm
+                    <Button 
+                    onClick={handleConfirmRemove} 
+                    color="primary" 
+                    variant="contained" 
+                    sx={{
+                        textTransform: 'none',
+                        backgroundColor: '#1976d2',
+                        '&:hover': {
+                        backgroundColor: '#1565c0',
+                        }
+                    }}
+                    >
+                    Confirm
                     </Button>
                 </DialogActions>
-            </Dialog>
+                </Dialog>
         </Container>
     );
 };
