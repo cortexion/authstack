@@ -1,3 +1,4 @@
+## My Food Diary App
 ---------------------------------------------------------------------------
 Frontend development:
 
@@ -13,7 +14,7 @@ Start server:
 
 ---
 
-Package .jar and then push to deploy:
+**Package .jar and then push to deploy:**
 
 `Maven -> Run Maven Commands -> package`
 
@@ -47,8 +48,7 @@ demo.app.jwtSecret= ======================spring===========================
 demo.app.jwtExpirationMs= 86400000
 ```
 
-## Run following SQL insert statements
-
+**Run following SQL insert statements:**
 ```
 INSERT INTO roles(name) VALUES('ROLE_USER');
 INSERT INTO roles(name) VALUES('ROLE_MODERATOR');
