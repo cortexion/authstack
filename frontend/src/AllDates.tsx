@@ -114,7 +114,7 @@ const AllDates = () => {
         <Container maxWidth="md" component="main">
             {user && '↖️ Try adding a new food with that button' }
             <Typography variant="h4" component="h1" gutterBottom>                
-                {user ? 'Consumables List' : 'Login first! Just click LOGIN right there ↗️'}
+                {user ? 'Consumables list:' : 'Login first! Just click LOGIN right there ↗️'}
                 {(user && !dates.length) && <div>Refresh the page!</div>}
             </Typography>
             {user && <div><div style={{ border: '1px solid black', borderRadius: '5px', padding: '15px', margin: '10px', boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)' }}>
