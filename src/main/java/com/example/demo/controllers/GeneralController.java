@@ -21,7 +21,7 @@ public class GeneralController {
 
     private static final Logger logger = LoggerFactory.getLogger(GeneralController.class);
 
-    @GetMapping(value = { "/", "{path:^(?!api).*}" })
+    @GetMapping(value = { "/", "{path:^(?!api|.*\\..*$).*}" })
     public ResponseEntity<Resource> serveIndex() {
         logger.info("Serving React app index.html right now...");
 
